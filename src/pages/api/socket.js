@@ -100,16 +100,27 @@ let Socket = (req, res) => {
         console.log("initializing client");
 
         io.on("connection", (socket) => {
-            console.log(`new user ${socket.id} connected`);
+            
+            console.log(`new user ${socket.id} connected. no.of users : ${io.engine.clientsCount}`);
             socket.on("init", () => {
                 socket.emit("init-f", d);
             });
             socket.on("logout", () => {
                 client.destroy();
-                console.log("destroying client client");
+                io.sockets.emit("destroyed");
+                console.log("destroying the client");
                 d.val = "loading";
-                io.sockets.emit("loading");
+                setTimeout(() => {
+                    io.sockets.emit("loading");
+                }, 3500);
                 client.initialize();
+                console.log("re-initializing the client");
+            });
+
+            socket.on('disconnect', function () {
+
+                console.log(`user ${socket.id} disconnected. no.of users : ${io.engine.clientsCount}`);
+
             });
         });
     }

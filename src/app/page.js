@@ -8,6 +8,7 @@ import Loader from "lib/loader";
 let Page = () => {
     const [socket, setSocket] = useState(null);
     const [val, setVal] = useState(null);
+    const [text, setText] = useState("Initializing");
     const [qr, setQr] = useState(null);
     const [loader, setLoader] = useState(true);
 
@@ -27,44 +28,66 @@ let Page = () => {
             socket.on("qr", (qr) => {
                 setTimeout(() => {
                     setLoader(false);
-                }, 500);
+                }, 1000);
                 setLoader(true);
+                setText("Generating QR Code");
                 setVal("qr");
                 setQr(qr);
             });
             socket.on("loading", () => {
                 setLoader(true);
+                setText("Restarting");
                 setVal(null);
             });
             socket.on("ready", () => {
                 setTimeout(() => {
                     setLoader(false);
-                }, 1500);
-                setLoader(true);
+                    setVal("ready");
+                }, 2500);
+                setTimeout(() => {
+                    setText("Logging you in");
+                    setLoader(true);
+                }, 1000);
                 setQr(null);
-                setVal("ready");
             });
             socket.on("authenticated", () => {
                 setTimeout(() => {
                     setLoader(false);
                 }, 1000);
                 setLoader(true);
+                setText("Authenticating");
                 setVal("authenticated");
             });
             socket.on("disconnected", () => {
                 setTimeout(() => {
                     setLoader(false);
-                }, 1500);
+                }, 1000);
                 setLoader(true);
+                setText("Disconnecting the client");
 
-                setQr(null);
                 setVal("disconnected");
+                setQr(null);
+            });
+            socket.on("destroyed", () => {
+                setTimeout(() => {
+                    setLoader(false);
+                }, 1000);
+                setLoader(true);
+                setText("Destroying the client");
+
+                setVal("destroyed");
+                setQr(null);
             });
             socket.on("init-f", (d) => {
                 if (d.val == "loading") {
                     setLoader(true);
+                    setText("Generating QR Code");
                 } else {
-                    setLoader(false);
+                    setTimeout(() => {
+                        setLoader(false);
+                    }, 1000);
+                    setLoader(true);
+                    setText("Connecting to the client");
                 }
                 setVal(d.val);
                 setQr(d.qr);
@@ -77,7 +100,7 @@ let Page = () => {
             {loader ? (
                 <div className="fc">
                     <Loader />
-                    <div className="text2"> Loading</div>
+                    <div className="text2">{text}</div>
                 </div>
             ) : (
                 (() => {
@@ -106,18 +129,27 @@ let Page = () => {
                                     Client is authenticated!
                                 </div>
                             );
+
+                        case "destroyed":
+                            return (
+                                <div className="text">
+                                    Client was destroyed!
+                                </div>
+                            );
                     }
                 })()
             )}
-            {!loader && (
+            {!loader && (val=== "qr" || val=== "ready") && (
                 <button
                     className="logout"
                     onClick={(e) => {
                         socket.emit("logout");
+                        setLoader(true);
+                        setText("Restarting the client");
                     }}
                     onMouseLeave={(e) => e.target.blur()}
                 >
-                    Logout
+                    {val === "qr" ? "Destroy" : "Logout"}
                 </button>
             )}
         </div>
