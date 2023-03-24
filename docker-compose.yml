@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  wwebjs:
+    image: nippiweb
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: kp
+    container_name: shooie
+    # stdin_open: true
+    # tty: true
+    command:  npm run dev
+    environment:
+      - DEBUG=True
+    volumes:
+      - .:/usr/app
+      - /usr/app/node_modules
+    # restart: unless-stopped
+    ports:
+      - 5000:3000

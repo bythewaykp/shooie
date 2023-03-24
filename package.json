@@ -1,0 +1,30 @@
+{
+  "name": "nippi-web",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@next/font": "13.2.4",
+    "bufferutil": "^4.0.7",
+    "eslint": "8.36.0",
+    "eslint-config-next": "13.2.4",
+    "express": "^4.18.2",
+    "fluent-ffmpeg": "^2.1.2",
+    "google-spreadsheet": "^3.3.0",
+    "next": "13.2.4",
+    "qrcode.react": "^3.1.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
+    "utf-8-validate": "^5.0.10",
+    "whatsapp-web.js": "^1.19.5",
+    "ytdl-core": "^4.11.2",
+    "ytsr": "^3.8.0"
+  }
+}

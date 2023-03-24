@@ -1,0 +1,41 @@
+body {
+    background-color: #00a884;
+}
+.center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.qrbound {
+    background-color: white;
+    border-radius: 30px;
+    padding: 25px;
+}
+
+.qr {
+    width: 220px;
+    height: 220px;
+}
+div {
+    color: white;
+}
+.text{
+    font-family:"Josefin Sans";
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: white;
+}
+
+@font-face {
+    font-family: "Josefin Sans";
+    src: url("../../assets/Josefin_Sans/JosefinSans-SemiBold.ttf");
+    font-weight: 600;
+}
+@font-face {
+    font-family: "Josefin Sans";
+    src: url("../../assets/Josefin_Sans/JosefinSans-ExtraLight.ttf");
+    font-weight: 100;
+}
