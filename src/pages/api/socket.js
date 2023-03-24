@@ -8,19 +8,12 @@ let Socket = (req, res) => {
         console.log("Socket is initializing");
 
         let d = {
-            val:"loading",
-            qr:null
-        }
+            val: "loading",
+            qr: null,
+        };
 
         const io = new Server(res.socket.server);
         res.socket.server.io = io;
-
-        io.on("connection", (socket) => {
-            console.log(`new user ${socket.id} connected`);
-            socket.on('init',()=>{
-                socket.emit('init-f',d)
-            })
-        });
 
         const client = new Client({
             authStrategy: new NoAuth(),
@@ -48,7 +41,7 @@ let Socket = (req, res) => {
             console.log(`created QR`);
             io.sockets.emit("qr", qr);
             d.val = "qr";
-            d.qr=qr
+            d.qr = qr;
         });
 
         client.on("ready", async () => {
@@ -64,7 +57,7 @@ let Socket = (req, res) => {
                 } is ready! ---\n`
             );
             d.val = "ready";
-            d.qr=null
+            d.qr = null;
         });
 
         client.on("auth_failure", (qr) => {
@@ -82,7 +75,7 @@ let Socket = (req, res) => {
             io.sockets.emit("disconnected");
             console.log("Client is disconnected!");
             d.val = "disconnected";
-            d.qr=null
+            d.qr = null;
             setTimeout(() => {
                 d.val = "loading";
                 io.sockets.emit("loading");
@@ -104,8 +97,21 @@ let Socket = (req, res) => {
         });
 
         client.initialize();
-
         console.log("initializing client");
+
+        io.on("connection", (socket) => {
+            console.log(`new user ${socket.id} connected`);
+            socket.on("init", () => {
+                socket.emit("init-f", d);
+            });
+            socket.on("logout", () => {
+                client.destroy();
+                console.log("destroying client client");
+                d.val = "loading";
+                io.sockets.emit("loading");
+                client.initialize();
+            });
+        });
     }
     res.end();
 };

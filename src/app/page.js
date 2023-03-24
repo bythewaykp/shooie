@@ -22,7 +22,6 @@ let Page = () => {
         handler();
     }, []);
 
-
     useEffect(() => {
         if (socket) {
             socket.on("qr", (qr) => {
@@ -61,36 +60,65 @@ let Page = () => {
                 setQr(null);
                 setVal("disconnected");
             });
-            socket.on('init-f', (d) => {
-                if(d.val=='loading'){
-                    setLoader(true)
-                }
-                else{
+            socket.on("init-f", (d) => {
+                if (d.val == "loading") {
+                    setLoader(true);
+                } else {
                     setLoader(false);
                 }
                 setVal(d.val);
                 setQr(d.qr);
             });
-            socket.emit('init')
+            socket.emit("init");
         }
     }, [socket]);
     return (
         <div className="center">
             {loader ? (
-                <Loader />
+                <div className="fc">
+                    <Loader />
+                    <div className="text2"> Loading</div>
+                </div>
             ) : (
                 (() => {
                     switch (val) {
                         case "qr":
-                            return <div className="qrbound"><QRCodeSVG className="qr" value={qr} size={280} /></div>;
+                            return (
+                                <div className="qrbound">
+                                    <QRCodeSVG
+                                        className="qr"
+                                        value={qr}
+                                        size={280}
+                                    />
+                                </div>
+                            );
                         case "ready":
                             return <div className="text">Client is ready!</div>;
                         case "disconnected":
-                            return <div className="text">Client got disconnected!</div>;
+                            return (
+                                <div className="text">
+                                    Client got disconnected!
+                                </div>
+                            );
                         case "authenticated":
-                            return <div className="text">Client is authenticated!</div>;
+                            return (
+                                <div className="text">
+                                    Client is authenticated!
+                                </div>
+                            );
                     }
                 })()
+            )}
+            {!loader && (
+                <button
+                    className="logout"
+                    onClick={(e) => {
+                        socket.emit("logout");
+                    }}
+                    onMouseLeave={(e) => e.target.blur()}
+                >
+                    Logout
+                </button>
             )}
         </div>
     );

@@ -1,12 +1,22 @@
 body {
     background-color: #00a884;
 }
+.fc{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+}
 .center {
     position: absolute;
     left: 50%;
     top: 50%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
 }
 
 .qrbound {
@@ -24,7 +34,14 @@ div {
 }
 .text{
     font-family:"Josefin Sans";
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: white;
+}
+
+.text2{
+    font-family:"Josefin Sans";
+    font-size: 1.1rem;
     font-weight: 600;
     color: white;
 }
@@ -39,3 +56,33 @@ div {
     src: url("../../assets/Josefin_Sans/JosefinSans-ExtraLight.ttf");
     font-weight: 100;
 }
+
+.logout{
+    
+    all:unset;
+    cursor: pointer;
+    font-family:"Josefin Sans";
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    width: fit-content;
+    padding: 10px 20px;
+    background-color: white;
+    color: #00a884;
+    border-radius: 50px;
+    transition: 0.3s;
+}
+.logout:hover{
+    
+    background-color: #0d5243;
+    color: white;
+    /* transition: 1s; */
+}
+
+
+.logout:focus{
+    background-color: #2d88bd;
+    color: white;
+    /* transition: 1s; */
+}
+
