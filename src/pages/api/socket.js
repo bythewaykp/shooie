@@ -39,9 +39,9 @@ let Socket = (req, res) => {
 
         client.on("qr", (qr) => {
             console.log(`created QR`);
-            io.sockets.emit("qr", qr);
             d.val = "qr";
             d.qr = qr;
+            io.sockets.emit("qr", qr);
         });
 
         client.on("ready", async () => {
@@ -100,7 +100,7 @@ let Socket = (req, res) => {
         console.log("initializing client");
 
         io.on("connection", (socket) => {
-            
+
             console.log(`new user ${socket.id} connected. no.of users : ${io.engine.clientsCount}`);
             socket.on("init", () => {
                 socket.emit("init-f", d);
@@ -116,6 +116,11 @@ let Socket = (req, res) => {
                 client.initialize();
                 console.log("re-initializing the client");
             });
+
+            socket.on('qr-f',  ()=> {
+                console.log('called qr-f');
+                socket.emit('qr', d.qr);
+            })
 
             socket.on('disconnect', function () {
 

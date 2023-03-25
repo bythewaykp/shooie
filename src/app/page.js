@@ -1,9 +1,11 @@
 "use client";
 import io from "socket.io-client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { QRCodeSVG } from "qrcode.react";
 import Loader from "lib/loader";
+import Loader2 from "lib/loader2";
+import Spinner from "lib/spinner";
 
 let Page = () => {
     const [socket, setSocket] = useState(null);
@@ -11,6 +13,9 @@ let Page = () => {
     const [text, setText] = useState("Initializing");
     const [qr, setQr] = useState(null);
     const [loader, setLoader] = useState(true);
+
+    const valref = useRef();
+    valref.current = val;
 
     let handler = async () => {
         await fetch("/api/socket");
@@ -26,12 +31,27 @@ let Page = () => {
     useEffect(() => {
         if (socket) {
             socket.on("qr", (qr) => {
-                setTimeout(() => {
-                    setLoader(false);
-                }, 1000);
-                setLoader(true);
-                setText("Generating QR Code");
-                setVal("qr");
+                // if (valref.current === "qr") {
+                //     setTimeout(() => {
+                //         setLoader(false);
+                //     }, 1000);
+                //     setLoader(true);
+                //     setText('Updating QR')
+                //     setVal("qr");
+                // }
+                if (valref.current === "qr") {
+                    setTimeout(() => {
+                        setVal("qr");
+                    }, 1000);
+                    setVal("updateqr");
+                } else {
+                    setTimeout(() => {
+                        setLoader(false);
+                    }, 1000);
+                    setLoader(true);
+                    setText("Generating QR Code");
+                    setVal("qr");
+                }
                 setQr(qr);
             });
             socket.on("loading", () => {
@@ -81,13 +101,13 @@ let Page = () => {
             socket.on("init-f", (d) => {
                 if (d.val == "loading") {
                     setLoader(true);
-                    setText("Generating QR Code");
+                    setText("Connecting to the client");
                 } else {
                     setTimeout(() => {
                         setLoader(false);
                     }, 1000);
                     setLoader(true);
-                    setText("Connecting to the client");
+                    setText("Fetching data");
                 }
                 setVal(d.val);
                 setQr(d.qr);
@@ -115,6 +135,23 @@ let Page = () => {
                                     />
                                 </div>
                             );
+                        case "updateqr":
+                            return (
+                                <div className="fc">
+                                    <div className="qrbound">
+                                        <div className="qr">
+                                            <div className="scale">
+                                                <Loader2 />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="updatingqr">
+                                        Updating the QR
+                                    </div>
+                                    {/* <div className="text">Updating the QR</div> */}
+                                </div>
+                            );
+
                         case "ready":
                             return <div className="text">Client is ready!</div>;
                         case "disconnected":
@@ -139,7 +176,7 @@ let Page = () => {
                     }
                 })()
             )}
-            {!loader && (val=== "qr" || val=== "ready") && (
+            {!loader && (val === "qr" || val === "ready") && (
                 <button
                     className="logout"
                     onClick={(e) => {
@@ -152,6 +189,33 @@ let Page = () => {
                     {val === "qr" ? "Destroy" : "Logout"}
                 </button>
             )}
+            <button
+                className="logout"
+                onClick={(e) => {
+                    socket.emit("qr-f");
+                }}
+                onMouseLeave={(e) => e.target.blur()}
+            >
+                Load new QR
+            </button>
+            {/* {updateqr ? (
+                !loader &&
+                (val === "qr" || val === "ready") && (
+                    <button
+                        className="logout"
+                        onClick={(e) => {
+                            socket.emit("logout");
+                            setLoader(true);
+                            setText("Restarting the client");
+                        }}
+                        onMouseLeave={(e) => e.target.blur()}
+                    >
+                        {val === "qr" ? "Destroy" : "Logout"}
+                    </button>
+                )
+            ) : (
+                <div className="text">Updating QR</div>
+            )} */}
         </div>
     );
 };

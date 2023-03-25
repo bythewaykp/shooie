@@ -1,3 +1,9 @@
+:root{
+    --ring-size:50px;
+    --ring-border:6px;
+}
+
+
 body {
     background-color: #00a884;
 }
@@ -20,12 +26,16 @@ body {
 }
 
 .qrbound {
+    width: fit-content;
     background-color: white;
     border-radius: 30px;
     padding: 25px;
 }
 
 .qr {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 220px;
     height: 220px;
 }
@@ -55,6 +65,19 @@ div {
     font-family: "Josefin Sans";
     src: url("../../assets/Josefin_Sans/JosefinSans-ExtraLight.ttf");
     font-weight: 100;
+}
+
+.updatingqr{
+    font-family:"Josefin Sans";
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    width: fit-content;
+    padding: 10px 20px;
+
+}
+.scale{
+    transform: scale(0.7);
 }
 
 .logout{
